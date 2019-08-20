@@ -1,10 +1,23 @@
-int radius1 = int(400); //<>//
+int radius1 = int(400);
 int radius2 = int(200);
 
 class alien {
   int x, y, dx, dy, width, height;
   boolean discovered;
+  alien () {
+    width = 35;
+    height = 35;
+    dx = int(random(5)+1);
+    dy = int(random(5)+1);
+    x= int(random(width));
+    y= int(random(height));
+    while (inArea51(x, y) == false) {
+      x = int(random(width));
+      y = int(random(height));
+    }
+  }
 }
+
 class agent {
   int x, y, dx, dy, width, height;
 }
@@ -63,19 +76,8 @@ void movePeople() {
 void makeAliens() {
   for (int i=0; i<aliens.length; i++) {
     aliens[i]=new alien();
-    aliens[i].width = 35;
-    aliens[i].height = 35;
-    aliens[i].dx = int(random(5)+1);
-    aliens[i].dy = int(random(5)+1);
-    aliens[i].x= int(random(width));
-    aliens[i].y= int(random(height));
-    while (inArea51(aliens[i].x, aliens[i].y)==false) {
-      aliens[i].x=int(random(width));
-      aliens[i].y= int(random(height));
-    }
   }
 }
-
 
 
 void makeAgent() {

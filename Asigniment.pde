@@ -1,5 +1,5 @@
-int radius1 = int(750); //<>//
-int radius2 = int(400);
+int radius1 = int(400); //<>//
+int radius2 = int(200);
 
 class alien {
   int x, y, dx, dy, width, height;
@@ -11,6 +11,7 @@ class agent {
 
 class people {
   int x, y, dx, dy, width, height;
+  boolean inArea51, inTrackingZone;
 }
 alien[] aliens=new alien[20];
 agent[] agents=new agent[int(1)];
@@ -29,15 +30,16 @@ void setup() {
 
 
 void draw() {
-  movePeople();
-  moveAlien();
-  moveAgent();
+  background(100);
   ellipseMode(CENTER);
   fill(100);
-  ellipse(500, 500, radius1, radius1);
+  ellipse(500, 500, radius1*2, radius1*2);
   fill(0);
-  ellipse(500, 500, radius2, radius2);
+  ellipse(500, 500, radius2*2, radius2*2);
   closestPerson();
+  movePeople();
+  moveAliens();
+  moveAgent();
 }
 
 void makePeople() {
@@ -58,17 +60,22 @@ void movePeople() {
 }
 
 
-void makeAlien() {
+void makeAliens() {
   for (int i=0; i<aliens.length; i++) {
     aliens[i]=new alien();
     aliens[i].width = 35;
     aliens[i].height = 35;
-    aliens[i].dx = 3;
-    aliens[i].dy = 3;
+    aliens[i].dx = int(random(5)+1);
+    aliens[i].dy = int(random(5)+1);
     aliens[i].x= int(random(width));
     aliens[i].y= int(random(height));
+    while (inArea51(aliens[i].x, aliens[i].y)==false) {
+      aliens[i].x=int(random(width));
+      aliens[i].y= int(random(height));
+    }
   }
 }
+
 
 
 void makeAgent() {
@@ -81,7 +88,8 @@ void makeAgent() {
     agents[i].dy=2;
     agents[i].x=int(random(radius2));
     agents[i].y=int(random(radius2));
-  }     // tracking shite
+  } 
+  // tracking shite
 }
 void newLevel() {
   makePeople();
@@ -103,34 +111,38 @@ void keyPressed(int x, int y) {
   }
 }
 boolean inArea51(int x, int y) {
-  if (dist(width/2, height/2, x, y) >= radius2) { 
+  if (dist(width/2, height/2, x, y) >= radius2-50) {
     return false;
   } else {
     return true;
   }
 }
 boolean inTrackingZone (int x, int y) {
-  if (dist(width/2, height/2, x, y) >= radius1) { 
+  if (dist(width/2, height/2, x, y) >= radius1) {
     return false;
   } else {
+
     return true;
   }
 }
 
 
-void moveAlien() {
+void moveAliens() {
   for (int i=0; i<aliens.length; i++) {
-    image(alien, aliens[i].x+20, aliens[i].y+20, aliens[i].width, aliens[i].height);
-    if (aliens[i].x>400) aliens[i].dx = aliens[i].dx *-1;
+    image(alien, aliens[i].x-10, aliens[i].y-10, aliens[i].width, aliens[i].height);
+    aliens[i].x = aliens[i].x + aliens[i].dx;
     aliens[i].y = aliens[i].y+aliens[i].dy;
-    if (aliens[i].y>400) aliens[i].dy = aliens[i].dy*-1;
+    if (inArea51(aliens[i].x, aliens[i].y) == false) { 
+      aliens[i].dx = aliens[i].dx *-1;
+      aliens[i].dy = aliens[i].dy *-1;
+    }
   }
 }
 
 void moveAgent() {
-  for(int i=0; i<agents.length;i++) {
+  for (int i=0; i<agents.length; i++) {
+    agents[i]=new agent();
     image(agent, agents[i].x, agents[i].y, agents[i].width, agents[i].height);
-    
   }
 }
 
@@ -141,8 +153,6 @@ void moveAgent() {
 // return false;
 //}
 void makeAgents() {
-}
-void makeAliens() {
 }
 void closestPerson() {
 }

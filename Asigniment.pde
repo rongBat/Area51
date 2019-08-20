@@ -14,7 +14,7 @@ class people {
   boolean inArea51, inTrackingZone;
 }
 alien[] aliens=new alien[20];
-agent[] agents=new agent[int(1)];
+agent[] agents=new agent[int(100)];
 people[] peoples = new people[int(15)];
 PImage people, alien, agent; 
 
@@ -78,7 +78,7 @@ void makeAliens() {
 
 
 
-void makeAgent() {
+void makeAgents() {
   for (int i=0; i<agents.length; i++)
   {
     agents[i]=new agent();
@@ -86,9 +86,14 @@ void makeAgent() {
     agents[i].height=50;
     agents[i].dx=2;
     agents[i].dy=2;
-    agents[i].x=int(random(radius2));
-    agents[i].y=int(random(radius2));
-  } 
+    agents[i].x=int(random(width));
+    agents[i].y=int(random(height));
+    while(inTrackingZone(agents[i].x,agents[i].y) ==false){
+      agents[i].x=int(random(width));
+      agents[i].y=int(random(height));
+    }
+  }
+
   // tracking shite
 }
 void newLevel() {
@@ -152,7 +157,6 @@ void moveAgent() {
 // return true;
 // return false;
 //}
-void makeAgents() {
-}
+
 void closestPerson() {
 }

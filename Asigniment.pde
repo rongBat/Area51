@@ -14,7 +14,7 @@ class people {
   boolean inArea51, inTrackingZone;
 }
 alien[] aliens=new alien[20];
-agent[] agents=new agent[int(100)];
+agent[] agents=new agent[int(1)];
 people[] peoples = new people[int(15)];
 PImage people, alien, agent; 
 
@@ -51,13 +51,33 @@ void makePeople() {
     peoples[i].dy = 3;
     peoples[i].x= int(random(width-10));
     peoples[i].y= int(random(height-10));
+    while (inTrackingZone(peoples[i].x, peoples[i].y)==true) {
+      peoples[i].x= int(random(width+10));
+      peoples[i].y= int(random(height+10));
+    }
   }
 }
 void movePeople() {
   for (int i=0; i<peoples.length; i++) {
     image(people, peoples[i].x, peoples[i].y, peoples[i].width, peoples[i].height);
+    if (key==CODED) {
+      while (keyCode== LEFT) {
+        peoples[i].x=peoples[i].x-peoples[i].dx;
+        println("aaa");
+      }
+    } else if (keyCode==RIGHT) {
+      peoples[i].x=peoples[i].x+peoples[i].dx;
+      println("ddd");
+    } else if (keyCode==UP) {
+      peoples[i].y=peoples[i].y+peoples[i].dy;
+      println("www");
+    } else if (keyCode==DOWN) {
+      peoples[i].y=peoples[i].y-peoples[i].dy;
+      println("sss");
+    }
   }
 }
+
 
 
 void makeAliens() {
@@ -88,9 +108,9 @@ void makeAgents() {
     agents[i].dy=2;
     agents[i].x=int(random(width));
     agents[i].y=int(random(height));
-    while(inTrackingZone(agents[i].x,agents[i].y) ==false){
-      agents[i].x=int(random(width));
-      agents[i].y=int(random(height));
+    while (inTrackingZone(agents[i].x, agents[i].y) ==false) {
+      agents[i].x=int(random(width-50));
+      agents[i].y=int(random(height-50));
     }
   }
 
@@ -115,6 +135,7 @@ void keyPressed(int x, int y) {
     println("sss");
   }
 }
+
 boolean inArea51(int x, int y) {
   if (dist(width/2, height/2, x, y) >= radius2-50) {
     return false;
@@ -146,7 +167,6 @@ void moveAliens() {
 
 void moveAgent() {
   for (int i=0; i<agents.length; i++) {
-    agents[i]=new agent();
     image(agent, agents[i].x, agents[i].y, agents[i].width, agents[i].height);
   }
 }

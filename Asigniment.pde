@@ -1,6 +1,6 @@
-int radius1 = int(400); //<>//
+int radius1 = int(400); //<>// //<>//
 int radius2 = int(200);
-
+int selectedPerson=0;
 class alien {
   int x, y, dx, dy, width, height;
   boolean discovered;
@@ -39,7 +39,7 @@ void draw() {
   closestPerson();
   movePeople();
   moveAliens();
-  moveAgent();
+  moveAgents();
 }
 
 void makePeople() {
@@ -47,8 +47,8 @@ void makePeople() {
     peoples[i]=new people();
     peoples[i].width = 25;
     peoples[i].height = 25;
-    peoples[i].dx = 3;
-    peoples[i].dy = 3;
+    peoples[i].dx = 0;
+    peoples[i].dy = 0;
     peoples[i].x= int(random(width-10));
     peoples[i].y= int(random(height-10));
     while (inTrackingZone(peoples[i].x, peoples[i].y)==true) {
@@ -59,24 +59,20 @@ void makePeople() {
 }
 void movePeople() {
   for (int i=0; i<peoples.length; i++) {
+    peoples[i].x=peoples[i].x+peoples[i].dx;
+    peoples[i].y= peoples[i].y+peoples[i].dy;
     image(people, peoples[i].x, peoples[i].y, peoples[i].width, peoples[i].height);
-    if (key==CODED) {
-      while (keyCode== LEFT) {
-        peoples[i].x=peoples[i].x-peoples[i].dx;
-        println("aaa");
-      }
-    } else if (keyCode==RIGHT) {
-      peoples[i].x=peoples[i].x+peoples[i].dx;
-      println("ddd");
-    } else if (keyCode==UP) {
-      peoples[i].y=peoples[i].y+peoples[i].dy;
-      println("www");
-    } else if (keyCode==DOWN) {
-      peoples[i].y=peoples[i].y-peoples[i].dy;
-      println("sss");
+    if (peoples[i].x>width||peoples[i].x<0) {
+      peoples[i].dx=peoples[i].dx*-1;
     }
+    if (peoples[i].y>height||peoples[i].y<0) {
+      peoples[i].dy=peoples[i].dy*-1;
+    }
+    fill(0);
+    text(i, peoples[i].x, peoples[i].y);
   }
 }
+
 
 
 
@@ -122,19 +118,26 @@ void newLevel() {
   makeAliens();
 }
 
-void keyPressed(int x, int y) {
+void keyPressed() {
   if (key==CODED) {
-    while (keyCode== LEFT) {
-      println("aaa");
+    if (keyCode== LEFT) {
+      peoples[selectedPerson].dx =-1;
+    } else if (keyCode==RIGHT) {
+      peoples[selectedPerson].dx = 1;
+    } else if (keyCode==UP) {
+      peoples[selectedPerson].dy =-1;
+    } else if (keyCode==DOWN) {
+      peoples[selectedPerson].dy = 1;
     }
-  } else if (keyCode==RIGHT) {
-    println("ddd");
-  } else if (keyCode==UP) {
-    println("www");
-  } else if (keyCode==DOWN) {
-    println("sss");
+  } else {   
+    if (key=='0' || key=='1' || key=='2' || key=='3' || key=='4'||key=='5'||key=='6'||key=='7'||key=='8'||key=='9') {
+      selectedPerson = key-'0'; //minus the ascii value
+      println(selectedPerson);
+    }
   }
 }
+
+
 
 boolean inArea51(int x, int y) {
   if (dist(width/2, height/2, x, y) >= radius2-50) {
@@ -165,18 +168,18 @@ void moveAliens() {
   }
 }
 
-void moveAgent() {
+void moveAgents() {
   for (int i=0; i<agents.length; i++) {
     image(agent, agents[i].x, agents[i].y, agents[i].width, agents[i].height);
   }
 }
 
-//boolean isTouchingAlien() { 
-//if (dist()) {
-// }
-// return true;
-// return false;
-//}
-
+/*boolean isTouchingAlien(int x, int y) { 
+if (dist()) {
+ }
+ return true;
+ return false;
+}
+*/
 void closestPerson() {
 }

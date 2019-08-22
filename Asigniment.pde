@@ -1,6 +1,8 @@
-int radius1 = int(400); //<>// //<>//
+int radius1 = int(400);  //<>//
 int radius2 = int(200);
 int selectedPerson=0;
+int discoveredAliens=0;
+int peopleKilled=0;
 class alien {
   int x, y, dx, dy, width, height;
   boolean discovered;
@@ -11,7 +13,7 @@ class agent {
 
 class people {
   int x, y, dx, dy, width, height;
-  boolean inArea51, inTrackingZone;
+  boolean inArea51, inTrackingZone, dead;
 }
 alien[] aliens=new alien[20];
 agent[] agents=new agent[int(1)];
@@ -30,16 +32,19 @@ void setup() {
 
 
 void draw() {
-  background(100);
+  background(0);
   ellipseMode(CENTER);
   fill(100);
   ellipse(500, 500, radius1*2, radius1*2);
-  fill(0);
+  fill((millis())%256);
   ellipse(500, 500, radius2*2, radius2*2);
   closestPerson();
   movePeople();
   moveAliens();
   moveAgents();
+  discoverAliens();
+  killPeople();
+  
 }
 
 void makePeople() {
@@ -137,8 +142,27 @@ void keyPressed() {
   }
 }
 
+void discoverAliens() {
+  for (int i=0; i<peoples.length; i++) {
+    for (int j=0; j<aliens.length; j++) {
+      if (personTouchingAlien(peoples[i], aliens[j]) == true) {
+        aliens[j].x=2000;
+        discoveredAliens = discoveredAliens + 1;
+      }
+    }
+  }
+}
 
-
+void killPeople() {
+  for (int i=0; i<agents.length; i++) {
+    for (int j=0; j<peoples.length; j++) {
+      if (agentTouchingPerson(peoples[j], agents[i])==true) {
+        peoples[j].x=2000;
+        peopleKilled = peopleKilled + 1;
+      }
+    }
+  }
+}
 boolean inArea51(int x, int y) {
   if (dist(width/2, height/2, x, y) >= radius2-50) {
     return false;
@@ -174,12 +198,26 @@ void moveAgents() {
   }
 }
 
-/*boolean isTouchingAlien(int x, int y) { 
-if (dist()) {
- }
- return true;
- return false;
+boolean agentTouchingPerson(people p, agent a) {
+  if (dist(p.x, p.y, a.x, a.y) < p.width/2+a.width/2) {
+    return true;
+  } else return false;
 }
-*/
-void closestPerson() {
+
+boolean personTouchingAlien(people p, alien a) {
+  if (dist(p.x, p.y, a.x, a.y) < p.width/2+a.width/2) {
+    return true;
+  } else return false;
+}
+people closestPerson(agent a) {
+  people p=new people();
+  p.x=-10000000; p.y=-1000000;
+  //dist(a.x, a.y, p.x, , p.y)
+ 
+ p=peoples[i];
+ //loop throguh people 
+ // if dist is closer that p is closest THEN
+   //make p be that person
+ 
+  return p;
 }

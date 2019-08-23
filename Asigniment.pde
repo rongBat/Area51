@@ -1,9 +1,8 @@
-int radius1 = int(400);  //<>//
+int radius1 = int(400); 
 int radius2 = int(200);
 int selectedPerson=0;
 int discoveredAliens=0;
 int peopleKilled=0;
-int closestPerson = 2000;
 
 class alien {
   int x, y, dx, dy, width, height;
@@ -19,8 +18,8 @@ class people {
   boolean inArea51, inTrackingZone, dead;
 }
 alien[] aliens=new alien[20];
-agent[] agents=new agent[int(1)];
-people[] peoples = new people[int(15)];
+agent[] agents=new agent[int(2)];
+people[] peoples = new people[10];
 PImage people, alien, agent; 
 
 
@@ -46,6 +45,10 @@ void draw() {
   moveAgents();
   discoverAliens();
   killPeople();
+  trackClosestPerson();
+  fill(170);
+  text("Aliens Discovered:"+discoveredAliens, (width/3)+100,height/10);
+  text("People Alive:"+peoples.length, (width/3)+110, (height/10)-20);
 }
 
 void makePeople() {
@@ -106,8 +109,8 @@ void makeAgents() {
     agents[i]=new agent();
     agents[i].width=50;
     agents[i].height=50;
-    agents[i].dx=2;
-    agents[i].dy=2;
+    agents[i].dx=int(random(2)+1);
+    agents[i].dy=int(random(2)+1);
     agents[i].x=int(random(width));
     agents[i].y=int(random(height));
     while (inTrackingZone(agents[i].x, agents[i].y) ==false) {
@@ -147,7 +150,8 @@ void discoverAliens() {
   for (int i=0; i<peoples.length; i++) {
     for (int j=0; j<aliens.length; j++) {
       if (personTouchingAlien(peoples[i], aliens[j]) == true) {
-        aliens[j].x=2000;
+        //text("AKUEhgrJHGEA",300,300);
+        aliens[j].x=-20000;
         discoveredAliens = discoveredAliens + 1;
       }
     }
@@ -158,7 +162,7 @@ void killPeople() {
   for (int i=0; i<agents.length; i++) {
     for (int j=0; j<peoples.length; j++) {
       if (agentTouchingPerson(peoples[j], agents[i])==true) {
-        peoples[j].x=2000;
+        peoples[j].x=20000;
         peopleKilled = peopleKilled + 1;
       }
     }
@@ -175,7 +179,6 @@ boolean inTrackingZone (int x, int y) {
   if (dist(width/2, height/2, x, y) >= radius1) {
     return false;
   } else {
-
     return true;
   }
 }
@@ -196,11 +199,17 @@ void moveAliens() {
 void moveAgents() {
   for (int i=0; i<agents.length; i++) {
     image(agent, agents[i].x, agents[i].y, agents[i].width, agents[i].height);
-    closestPerson(agents[i]);
+    
+    //closestPerson(agents[i]);
+    agents[i].x = agents[i].x + agents[i].dx;
+    agents[i].y = agents[i].y+agents[i].dy;
+    if (inTrackingZone(agents[i].x, agents[i].y) == false) { 
+      agents[i].dx = agents[i].dx *-1;
+      agents[i].dy = agents[i].dy *-1;
+    }
   }
 }
-void trackClosestPerson() {
-}
+
 
 boolean agentTouchingPerson(people p, agent a) {
   if (dist(p.x, p.y, a.x, a.y) < p.width/2+a.width/2) {
@@ -217,23 +226,36 @@ boolean personTouchingAlien(people p, alien a) {
 
 people closestPerson(agent a) {
   people p=new people();
-  p.x=500; 
-  p.y=500;
+  p.x=-1000000000; 
+  p.y=-1000000000;
   for (int i=0; i<peoples.length; i++) {
-    if ( dist(a.x, a.y, p.x, p.y)< closestPerson) {
+    if ( dist(a.x, a.y,peoples[i].x,peoples[i].y) < dist(a.x, a.y, p.x, p.y)) {
       p = peoples[i];
     }
   }
   return p;
 }
+void trackClosestPerson() {
+  for (int i=0; i<agents.length; i++) {
+    people p;
+    p=closestPerson(agents[i]);
+    text(str(p.x)+","+str(p.y),agents[i].x, agents[i].y);
+    if (inTrackingZone(p.x, p.y)==true) {
+      if (p.x>agents[i].x) agents[i].dx=1;
+      if (p.x<agents[i].x) agents[i].dx =-1;
+      if (p.y>agents[i].y) agents[i].dy = 1;
+      if (p.y<agents[i].y) agents[i].dy = -1;
+    }
+  }
 
-//LOOP through all agents
+  //LOOP through all agents
   //person p=closestPerson(*agents[i])
   //set the agents' dx based on the relative x positions
   //set the agents' dy based on the relative y positions
 
 
 
-//loop throguh people 
-// if dist is closer that p is closest THEN
-//make p be that person
+  //loop throguh people 
+  // if dist is closer that p is closest THEN
+  //make p be that person
+}
